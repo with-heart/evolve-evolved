@@ -10,7 +10,8 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test"
+    "test": "tsdx test",
+    "lint": "eslint src/**"
   },
   "peerDependencies": {},
   "husky": {
@@ -24,8 +25,44 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint",
+      "prettier"
+    ],
+    "extends": [
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "@typescript-eslint/indent": 0,
+      "@typescript-eslint/explicit-function-return-type": 0,
+      "@typescript-eslint/no-use-before-define": [
+        "warn",
+        {
+          "classes": false,
+          "functions": false,
+          "variables": false,
+          "typedefs": false
+        }
+      ],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "args": "none",
+          "ignoreRestSiblings": true
+        }
+      ]
+    }
+  },
   "devDependencies": {
     "@types/jest": "^24.0.17",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
     "husky": "^3.0.2",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
