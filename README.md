@@ -1,27 +1,65 @@
-# TSDX Bootstrap
+# evolve-evolved
 
-This project was bootstrapped with [TSDX](https://github.com/jaredpalmer/tsdx).
+A library for efficiently mapping objects from one type to another. Based in part on the concept behind [`ramda.evolve`](https://ramdajs.com/docs/#evolve).
 
-## Local Development
+```ts
+import { evolve, rename, remove } from 'evolve-evolved'
+import { compose, toUpper, head, append } from 'ramda'
 
-Below is a list of commands you will probably find useful.
+const from = {
+  a: 'hello',
+  b: true,
+  c: 'life is swell',
+  d: {
+    e: ['first'],
+  },
+  f: 'bye-bye',
+  y: 'i am y',
+}
 
-### `npm start` or `yarn start`
+const apply = evolve({
+  a: toUpper,
+  b: 'now a string',
+  c: rename(
+    'z',
+    compose(
+      toUpper,
+      head,
+    ),
+  ),
+  d: {
+    e: append('last'),
+  },
+  f: remove,
+  x: toUpper, // not applied, because it doesn't exist in the object
+})
 
-Runs the project in development/watch mode. Your project will be rebuilt upon changes. TSDX has a special logger for you convenience. Error messages are pretty printed and formatted for compatibility VS Code's Problems tab.
+apply(from) ===
+  {
+    // transformed by `toUpper`
+    a: 'HELLO',
 
-<img src="https://user-images.githubusercontent.com/4060187/52168303-574d3a00-26f6-11e9-9f3b-71dbec9ebfcb.gif" width="600" />
+    // replaced by raw value
+    b: 'now a string',
 
-Your library will be rebuilt if you make edits.
+    // appended value to d.e
+    d: {
+      e: ['first', 'last'],
+    },
 
-### `npm run build` or `yarn build`
+    // f: 'bye-bye' // removed from the final object by `remove`
 
-Bundles the package to the `dist` folder.
-The package is optimized and bundled with Rollup into multiple formats (CommonJS, UMD, and ES Module).
+    // no transformation provided, so passed straight through
+    y: 'i am y',
 
-<img src="https://user-images.githubusercontent.com/4060187/52168322-a98e5b00-26f6-11e9-8cf6-222d716b75ef.gif" width="600" />
+    // renamed from `c` key to `z` key by `rename`
+    // value transformed by `toUpper` and `head`
+    z: 'L',
+  }
+```
 
-### `npm test` or `yarn test`
+# Why?
 
-Runs the test watcher (Jest) in an interactive mode.
-By default, runs tests related to files changed since the last commit.
+Mapping objects in a modern frontend project can be tiresome. Small variations of object types tend to exist between the various layers of the application (backends, APIs, form values, etc.). For complex types, this leads to large mapping functions, with many paths of branching logic, simply to
+
+`evolve-evolved` allows you to apply an object of transformations to an object, transforming the entire shape of the object at once.
