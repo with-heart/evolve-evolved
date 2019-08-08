@@ -1,6 +1,7 @@
 {
   "name": "evolve-evolved",
   "version": "0.0.0",
+  "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/evolve-evolved.esm.js",
   "typings": "dist/index.d.ts",
