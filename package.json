@@ -19,6 +19,11 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/src/**/*.spec.ts"
+    ]
+  },
   "prettier": {
     "printWidth": 80,
     "semi": false,
